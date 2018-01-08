@@ -1,0 +1,17 @@
+version: 1.0.{build}
+skip_tags: true
+configuration: Release
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+environment:
+  COVERALLS_REPO_TOKEN:
+    secure: /3Xkl+lEJUgNsmjSjkVyM18qnpN4kmxIx3NLeJjpbe6OxX3kyYiqYWWDj3BAERNE
+before_build:
+  - nuget restore Reinforced.Typings.sln
+build:
+  project: Reinforced.Typings.sln
+  verbosity: minimal
