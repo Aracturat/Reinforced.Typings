@@ -23,7 +23,7 @@ test_script:
   - ps: |
       nuget install OpenCover -OutputDirectory tools
       nuget install "coveralls.net" -OutputDirectory tools
-      $xunit = (Resolve-Path "packages\xunit.runner.console.*\tools\xunit.console.exe").ToString()
+      $xunit = (Resolve-Path "packages\xunit.runner.console.*\tools\xunit.console.clr4.exe").ToString()
       $openCover = (Resolve-Path "tools\OpenCover.*\tools\OpenCover.Console.exe").ToString()
       $coveralls = (Resolve-Path "tools\coveralls.net.*\tools\csmacnz.coveralls.exe").ToString()
       & $openCover -register:user -target:$xunit "-targetargs:""Reinforced.Typings.Tests\bin\$env:CONFIGURATION\Reinforced.Typings.Tests.dll"" /noshadow /appveyor" -filter:"+[*]*" -output:opencoverCoverage.xml
