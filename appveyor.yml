@@ -1,17 +1,31 @@
 version: 1.0.{build}
+
 skip_tags: true
 configuration: Release
+
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+  
 environment:
   COVERALLS_REPO_TOKEN:
     secure: /3Xkl+lEJUgNsmjSjkVyM18qnpN4kmxIx3NLeJjpbe6OxX3kyYiqYWWDj3BAERNE
+
 before_build:
   - nuget restore Reinforced.Typings.sln
 build:
   project: Reinforced.Typings.sln
   verbosity: minimal
+test_script:
+- ps: >-
+    nuget install OpenCover
+    nuget install coveralls.net
+
+    $openCover = (Resolve-Path "packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    $coveralls = (Resolve-Path "packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    
+    & $openCover -register:user -target:xunit.console.clr4.exe "-targetargs:""src\Reinforced.Typings.Tests\bin\$env:CONFIGURATION\Reinforced.Typings.Tests.dll"" /noshadow /appveyor" -filter:"+[*]* -[*.Tests]*" -output:opencoverCoverage.xml
+    & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_JOB_ID
