@@ -20,7 +20,7 @@ build:
   project: Reinforced.Typings.sln
   verbosity: minimal
 test_script:
-  - ps: >-
+  - ps: |
     nuget install OpenCover
     nuget install coveralls.net
     $openCover = (Resolve-Path "packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
